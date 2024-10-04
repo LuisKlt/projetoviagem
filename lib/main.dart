@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "App Lista para Widget",
+      title: "Viagens App",
       home: ModalMenu(),
     );
   }
@@ -46,52 +46,44 @@ class _ModalMenuState extends State<ModalMenu> {
         builder: (BuildContext context) {
           return Container(
             width: MediaQuery.of(context).size.width,
-            height: 500,
+            height: 300,
             child: Padding(
               padding: const EdgeInsets.all(30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Cadastro de Carros",
+                    "Cadastros",
                     style: TextStyle(fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20),
-                  TextField(
-                    controller: nomeController,
-                    decoration: InputDecoration(label: Text("Nome")),
-                  ),
-                  TextField(
-                    controller: consumoController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    decoration: InputDecoration(
-                      label: Text("Consumo"),
-                    ),
-                  ),
                   Expanded(child: Column()),
                   ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(Colors.amber),
-                          foregroundColor: WidgetStatePropertyAll(Colors.black),
+                          backgroundColor: WidgetStatePropertyAll(Colors.blueGrey),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
                           minimumSize:
-                              WidgetStatePropertyAll(Size.fromHeight(60))),
+                              WidgetStatePropertyAll(Size.fromHeight(90))),
                       onPressed: () {
-                        setState(() {
-                          lista.add(Carro(
-                            nome: nomeController.text,
-                            consumo: double.parse(consumoController.text),
-                          ));
-                        });
-                        Navigator.pop(context);
-                        nomeController.clear();
-                        consumoController.clear();
+                        setState(() {});
                       },
                       child: Text(
-                        "Cadastrar",
+                        "Carros",
+                        style: TextStyle(fontSize: 22),
+                      )),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.blueGrey),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          minimumSize:
+                              WidgetStatePropertyAll(Size.fromHeight(90))),
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Destinos",
                         style: TextStyle(fontSize: 22),
                       )),
                 ],
@@ -105,8 +97,9 @@ class _ModalMenuState extends State<ModalMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lista de cadastros"),
-        backgroundColor: Colors.amber,
+        title: Text("Viagens App"),
+        backgroundColor: Colors.blueGrey,
+        foregroundColor: Colors.white,
       ),
       body: ListView.builder(
         itemCount: lista.length,
@@ -123,7 +116,7 @@ class _ModalMenuState extends State<ModalMenu> {
             openModal();
           },
           backgroundColor: Colors.blueGrey,
-          child: const Icon(Icons.add)),
+          child: const Icon(Icons.add), foregroundColor: Colors.white),
     );
   }
 }
