@@ -37,9 +37,6 @@ class _ModalMenuState extends State<ModalMenu> {
     });
   }
 
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController consumoController = TextEditingController();
-
   void openModal() {
     showModalBottomSheet(
         context: context,
@@ -57,16 +54,16 @@ class _ModalMenuState extends State<ModalMenu> {
                     style: TextStyle(fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20),
-                  Expanded(child: Column()),
+                  SizedBox(height: 40),
                   ElevatedButton(
                       style: ButtonStyle(
                           backgroundColor: WidgetStatePropertyAll(Colors.blueGrey),
                           foregroundColor: WidgetStatePropertyAll(Colors.white),
                           minimumSize:
-                              WidgetStatePropertyAll(Size.fromHeight(90))),
+                              WidgetStatePropertyAll(Size.fromHeight(60))),
                       onPressed: () {
                         setState(() {});
+                        openModalCarros();
                       },
                       child: Text(
                         "Carros",
@@ -78,12 +75,72 @@ class _ModalMenuState extends State<ModalMenu> {
                           backgroundColor: WidgetStatePropertyAll(Colors.blueGrey),
                           foregroundColor: WidgetStatePropertyAll(Colors.white),
                           minimumSize:
-                              WidgetStatePropertyAll(Size.fromHeight(90))),
+                              WidgetStatePropertyAll(Size.fromHeight(60))),
                       onPressed: () {
                         setState(() {});
                       },
                       child: Text(
                         "Destinos",
+                        style: TextStyle(fontSize: 22),
+                      )),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController consumoController = TextEditingController();
+
+  void openModalCarros(){
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: 350,
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Cadastrar Carro",
+                    style: TextStyle(fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  Expanded(child: Column()),
+                  TextField(
+                    controller: nomeController,
+                    decoration: InputDecoration(label: Text("Nome")),
+                  ),
+                  TextField(
+                    controller: consumoController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: InputDecoration(
+                      label: Text("Consumo"),
+                    ),
+                  ),
+                  SizedBox(height: 60),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.blueGrey),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          minimumSize:
+                              WidgetStatePropertyAll(Size.fromHeight(60))),
+                      onPressed: () {
+                        setState(() {});
+                        nomeController.clear();
+                        consumoController.clear();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cadastrar",
                         style: TextStyle(fontSize: 22),
                       )),
                 ],
@@ -101,16 +158,7 @@ class _ModalMenuState extends State<ModalMenu> {
         backgroundColor: Colors.blueGrey,
         foregroundColor: Colors.white,
       ),
-      body: ListView.builder(
-        itemCount: lista.length,
-        itemBuilder: (context, index) {
-          return Cardwidget(
-            nome: lista[index].nome,
-            consumo: lista[index].consumo.toString(),
-            onRemove: () => removerItem(index),
-          );
-        },
-      ),
+      
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             openModal();
