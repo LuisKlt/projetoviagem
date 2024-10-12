@@ -1,7 +1,7 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projetoviagem/model/combustivel.dart';
+import 'package:projetoviagem/model/destino.dart';
 import 'model/carro.dart';
 
 void main() {
@@ -28,15 +28,23 @@ class ModalMenu extends StatefulWidget {
 }
 
 class _ModalMenuState extends State<ModalMenu> {
-  List<Carro> lista = [
+  
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController consumoController = TextEditingController();
+  final TextEditingController destinoController = TextEditingController();
+  final TextEditingController distanciaController = TextEditingController();
+  final TextEditingController tipoController = TextEditingController();
+  final TextEditingController precoController = TextEditingController();
+  
+  List<Carro> carroOption = [
     Carro(nome: "BMW M3", consumo: 10.4),
   ];
-
-  void removerItem(int index) {
-    setState(() {
-      lista.removeAt(index);
-    });
-  }
+  List<Destino> destinoOption = [
+    Destino(destino: 'Porto Alegre', distancia: 240),
+  ];
+  List<Combustivel> combustivelOption = [
+    Combustivel(tipo: 'Gasolina', preco: 6.6),
+  ];
 
   void openModal() {
     showModalBottomSheet(
@@ -44,7 +52,7 @@ class _ModalMenuState extends State<ModalMenu> {
         builder: (BuildContext context) {
           return Container(
             width: MediaQuery.of(context).size.width,
-            height: 300,
+            height: 350,
             child: Padding(
               padding: const EdgeInsets.all(30),
               child: Column(
@@ -65,10 +73,10 @@ class _ModalMenuState extends State<ModalMenu> {
                               WidgetStatePropertyAll(Size.fromHeight(60))),
                       onPressed: () {
                         setState(() {});
-                        openModalCarros();
+                        openModalCarro();
                       },
                       child: Text(
-                        "Carros",
+                        "Carro",
                         style: TextStyle(fontSize: 22),
                       )),
                   SizedBox(height: 20),
@@ -81,10 +89,26 @@ class _ModalMenuState extends State<ModalMenu> {
                               WidgetStatePropertyAll(Size.fromHeight(60))),
                       onPressed: () {
                         setState(() {});
-                        openModalDestinos();
+                        openModalDestino();
                       },
                       child: Text(
-                        "Destinos",
+                        "Destino",
+                        style: TextStyle(fontSize: 22),
+                      )),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(Colors.blueGrey),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          minimumSize:
+                              WidgetStatePropertyAll(Size.fromHeight(60))),
+                      onPressed: () {
+                        setState(() {});
+                        openModalCombustivel();
+                      },
+                      child: Text(
+                        "Combustível",
                         style: TextStyle(fontSize: 22),
                       )),
                 ],
@@ -94,10 +118,7 @@ class _ModalMenuState extends State<ModalMenu> {
         });
   }
 
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController consumoController = TextEditingController();
-
-  void openModalCarros() {
+  void openModalCarro() {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -155,10 +176,7 @@ class _ModalMenuState extends State<ModalMenu> {
         });
   }
 
-  final TextEditingController destinoController = TextEditingController();
-  final TextEditingController distanciaController = TextEditingController();
-
-  void openModalDestinos() {
+  void openModalDestino() {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -216,10 +234,70 @@ class _ModalMenuState extends State<ModalMenu> {
         });
   }
 
+  void openModalCombustivel() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: 350,
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Cadastrar Combustível",
+                    style: TextStyle(fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  Expanded(child: Column()),
+                  TextField(
+                    controller: tipoController,
+                    decoration: InputDecoration(label: Text("Tipo")),
+                  ),
+                  TextField(
+                    controller: precoController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: InputDecoration(
+                      label: Text("Preço"),
+                    ),
+                  ),
+                  SizedBox(height: 60),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(Colors.blueGrey),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          minimumSize:
+                              WidgetStatePropertyAll(Size.fromHeight(60))),
+                      onPressed: () {
+                        setState(() {});
+                        nomeController.clear();
+                        consumoController.clear();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cadastrar",
+                        style: TextStyle(fontSize: 22),
+                      )),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   final carroValue = ValueNotifier('');
-  final carroOption = ['Audi', 'BMW'];
+  
   final destinoValue = ValueNotifier('');
-  final destinoOption = ['Santa Maria', 'Porto Alegre'];
+  
+  final combustivelValue = ValueNotifier('');
+  
 
   @override
   Widget build(BuildContext context) {
@@ -246,17 +324,10 @@ class _ModalMenuState extends State<ModalMenu> {
                     child: DropdownButton<String>(
                       hint: const Text('Selecione o Carro'),
                       isExpanded: true,
-                      value: (value.isEmpty) ? null : value,
+                      value: '',
                       onChanged: (escolha) =>
                           carroValue.value = escolha.toString(),
-                      items: carroOption
-                          .map(
-                            (op) => DropdownMenuItem(
-                              value: op,
-                              child: Text(op),
-                            ),
-                          )
-                          .toList(),
+                      items: carroOption.cast(),
                     ),
                   );
                 }),
@@ -269,33 +340,29 @@ class _ModalMenuState extends State<ModalMenu> {
                     child: DropdownButton<String>(
                       hint: const Text('Selecione o Destino'),
                       isExpanded: true,
-                      value: (value.isEmpty) ? null : value,
+                      value: '',
                       onChanged: (escolha) =>
                           destinoValue.value = escolha.toString(),
-                      items: destinoOption
-                          .map(
-                            (op) => DropdownMenuItem(
-                              value: op,
-                              child: Text(op),
-                            ),
-                          )
-                          .toList(),
+                      items: destinoOption.cast(),
                     ),
                   );
                 }),
             SizedBox(height: 20),
-            SizedBox(
-              width: 300,
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  hintText: 'Valor do combustível',
-                ),
-              ),
-            ),
+            ValueListenableBuilder(
+                valueListenable: combustivelValue,
+                builder: (BuildContext context, String value, _) {
+                  return SizedBox(
+                    width: 300,
+                    child: DropdownButton<String>(
+                      hint: const Text('Selecione o Combustível'),
+                      isExpanded: true,
+                      value: '',
+                      onChanged: (escolha) =>
+                          combustivelValue.value = escolha.toString(),
+                      items: combustivelOption,
+                    ),
+                  );
+                }),
             SizedBox(height: 40),
             SizedBox(
               width: 300,
